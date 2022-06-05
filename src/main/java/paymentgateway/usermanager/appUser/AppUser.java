@@ -41,7 +41,8 @@ public class AppUser implements UserDetails {
     private Boolean locked = false;
     private Boolean enabled = false;
     private LocalDateTime created_at;
-
+    @Column(nullable = false,updatable = false)
+    private String marchandCode;
     public AppUser(String full_name,
                    String email,
                    String password,

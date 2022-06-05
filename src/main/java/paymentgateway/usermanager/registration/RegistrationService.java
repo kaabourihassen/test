@@ -58,7 +58,7 @@ public class RegistrationService {
             user.setAppUserRole(AppUserRole.USER);
             user.setEnabled(false);
             user.setLocked(true);
-
+            user.setMarchandCode(UUID.randomUUID().toString());
             appUserRepository.save(user);
 
             String token = UUID.randomUUID().toString();

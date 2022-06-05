@@ -1,15 +1,13 @@
 package paymentgateway.usermanager.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import paymentgateway.usermanager.appUser.AppUser;
 import paymentgateway.usermanager.repo.AppUserRepository;
 import paymentgateway.usermanager.service.AppUserService;
@@ -51,5 +49,35 @@ public class UserController {
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
         return ResponseEntity.ok(new JwtResponse(jwt));
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<AppUser>> getAllMarchand(){
+        List<AppUser> marchands=appUserService.findAllMarchand();
+        return new ResponseEntity<>(marchands, HttpStatus.OK);
+    }
+
+    @GetMapping("/find/{id}")
+    public ResponseEntity<AppUser> getMarchandById(@PathVariable("id")Long id){
+        AppUser marchand=appUserService.findMarchandById(id);
+        return new ResponseEntity<>(marchand, HttpStatus.OK);
+    }
+
+    @PostMapping("/add")
+    public ResponseEntity<AppUser> addMarchand(@RequestBody AppUser marchand) {
+        AppUser newMarchand = appUserService.addMarchand(marchand);
+        return new ResponseEntity<>(newMarchand, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<AppUser> updateEmployee(@RequestBody AppUser marchand) {
+        AppUser updateMarchand = appUserService.updateMarchand(marchand);
+        return new ResponseEntity<>(updateMarchand, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteMarchand(@PathVariable("id") Long id) {
+        appUserService.deleteMarchand(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
