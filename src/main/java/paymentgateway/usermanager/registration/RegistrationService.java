@@ -41,7 +41,7 @@ public class RegistrationService {
                         request.getFull_name(),
                         request.getEmail(),
                         request.getPassword(),
-                        AppUserRole.USER));
+                        AppUserRole.ADMIN));
         String link ="http://localhost:8090/api/v1/registration/confirm?token=" + token;
         emailSender.send(
                 request.getEmail(),
@@ -55,7 +55,7 @@ public class RegistrationService {
         if (userExists.isEmpty()) {
             String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
             user.setPassword(encodedPassword);
-            user.setAppUserRole(AppUserRole.USER);
+            user.setAppUserRole(AppUserRole.ADMIN);
             user.setEnabled(false);
             user.setLocked(true);
             user.setMarchandCode(UUID.randomUUID().toString());
@@ -72,10 +72,18 @@ public class RegistrationService {
         }else{
             throw new IllegalStateException("email already taken");
         }
-
-
     }
-
+    public AppUser addMarchand(RegistrationRequest marchand){
+        AppUser newMarchand = new AppUser();
+        newMarchand.setFull_name(marchand.getFull_name());
+        newMarchand.setEmail(marchand.getEmail());
+        newMarchand.setEnabled(true);
+        newMarchand.setLocked(false);
+        newMarchand.setAppUserRole(AppUserRole.MARCHAND);
+        newMarchand.setPassword(bCryptPasswordEncoder.encode(marchand.getPassword()));
+        newMarchand.setMarchandCode(UUID.randomUUID().toString());
+        return appUserRepository.save(newMarchand);
+    }
     @Transactional
     public String confirmToken(String token) {
         ConfirmationToken confirmationToken = confirmationTokenService

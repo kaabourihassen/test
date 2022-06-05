@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import paymentgateway.usermanager.appUser.AppUser;
+import paymentgateway.usermanager.appUser.AppUserRole;
 import paymentgateway.usermanager.exception.UserNotFoundException;
 import paymentgateway.usermanager.repo.AppUserRepository;
 
@@ -43,11 +44,6 @@ public class AppUserService implements UserDetailsService {
             user.setLocked(false);
         }
         return appUserRepository.save(user);
-    }
-
-    public AppUser addMarchand(AppUser marchand){
-        marchand.setMarchandCode(UUID.randomUUID().toString());
-        return appUserRepository.save(marchand);
     }
     public List<AppUser> findAllMarchand(){
         return appUserRepository.findAll();

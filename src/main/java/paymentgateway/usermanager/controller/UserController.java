@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import paymentgateway.usermanager.appUser.AppUser;
+import paymentgateway.usermanager.registration.RegistrationService;
 import paymentgateway.usermanager.repo.AppUserRepository;
 import paymentgateway.usermanager.service.AppUserService;
 import paymentgateway.usermanager.registration.RegistrationRequest;
@@ -25,7 +26,7 @@ public class UserController {
     @Autowired
     private AppUserService appUserService;
     @Autowired
-    private AppUserRepository appUserRepository;
+    private RegistrationService registrationService;
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
@@ -51,31 +52,31 @@ public class UserController {
         return ResponseEntity.ok(new JwtResponse(jwt));
     }
 
-    @GetMapping("/all")
+    @GetMapping("marchand/all")
     public ResponseEntity<List<AppUser>> getAllMarchand(){
         List<AppUser> marchands=appUserService.findAllMarchand();
         return new ResponseEntity<>(marchands, HttpStatus.OK);
     }
 
-    @GetMapping("/find/{id}")
+    @GetMapping("marchand/find/{id}")
     public ResponseEntity<AppUser> getMarchandById(@PathVariable("id")Long id){
         AppUser marchand=appUserService.findMarchandById(id);
         return new ResponseEntity<>(marchand, HttpStatus.OK);
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<AppUser> addMarchand(@RequestBody AppUser marchand) {
-        AppUser newMarchand = appUserService.addMarchand(marchand);
+    @PostMapping("marchand/add")
+    public ResponseEntity<AppUser> addMarchand(@RequestBody RegistrationRequest marchand) {
+        AppUser newMarchand = registrationService.addMarchand(marchand);
         return new ResponseEntity<>(newMarchand, HttpStatus.CREATED);
     }
 
-    @PutMapping("/update")
+    @PutMapping("marchand/update")
     public ResponseEntity<AppUser> updateEmployee(@RequestBody AppUser marchand) {
         AppUser updateMarchand = appUserService.updateMarchand(marchand);
         return new ResponseEntity<>(updateMarchand, HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("marchand/delete/{id}")
     public ResponseEntity<?> deleteMarchand(@PathVariable("id") Long id) {
         appUserService.deleteMarchand(id);
         return new ResponseEntity<>(HttpStatus.OK);
