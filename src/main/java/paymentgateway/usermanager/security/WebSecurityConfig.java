@@ -1,6 +1,7 @@
 package paymentgateway.usermanager.security;
 
 
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,21 +34,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		return new AuthTokenFilter();
 	}
 
-	@Override
-	public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-		authenticationManagerBuilder.userDetailsService(appUserService).passwordEncoder(passwordEncoder());
-	}
-
-	@Bean
-	@Override
-	public AuthenticationManager authenticationManagerBean() throws Exception {
-		return super.authenticationManagerBean();
-	}
-
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+//	@Override
+//	public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
+//		authenticationManagerBuilder.userDetailsService(appUserService).passwordEncoder(passwordEncoder());
+//	}
+//
+//	@Bean
+//	@Override
+//	public AuthenticationManager authenticationManagerBean() throws Exception {
+//		return super.authenticationManagerBean();
+//	}
+//
+//	@Bean
+//	public PasswordEncoder passwordEncoder() {
+//		return (PasswordEncoder) new Base64();
+//	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {

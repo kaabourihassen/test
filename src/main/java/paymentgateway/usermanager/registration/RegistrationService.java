@@ -14,6 +14,7 @@ import paymentgateway.usermanager.service.AppUserService;
 import javax.transaction.Transactional;
 import paymentgateway.usermanager.security.token.ConfirmationTokenService;
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -23,8 +24,6 @@ public class RegistrationService {
 
     private final AppUserService appUserService;
     private final EmailValidator emailValidator;
-    @Autowired
-    private PasswordEncoder bCryptPasswordEncoder;
     private ConfirmationTokenService confirmationTokenService;
     private final EmailSender emailSender;
     @Autowired
@@ -54,8 +53,7 @@ public class RegistrationService {
         Optional<AppUser> userExists = appUserRepository.findByEmail(user.getEmail());
 
         if (userExists.isEmpty()) {
-            String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
-            user.setPassword(encodedPassword);
+            user.setPassword(Base64.getMimeEncoder().encodeToString(user.getPassword().toString().getBytes()));
             user.setAppUserRole(AppUserRole.ADMIN);
             user.setEnabled(false);
             user.setLocked(true);
@@ -81,7 +79,7 @@ public class RegistrationService {
         newMarchand.setEnabled(true);
         newMarchand.setLocked(false);
         newMarchand.setAppUserRole(AppUserRole.MARCHAND);
-        newMarchand.setPassword(bCryptPasswordEncoder.encode(marchand.getPassword()));
+        newMarchand.setPassword(Base64.getMimeEncoder().encodeToString(marchand.getPassword().toString().getBytes()));
         newMarchand.setMarchandCode(UUID.randomUUID().toString());
         return appUserRepository.save(newMarchand);
     }

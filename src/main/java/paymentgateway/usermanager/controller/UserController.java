@@ -28,27 +28,13 @@ public class UserController {
     @Autowired
     private RegistrationService registrationService;
     @Autowired
-    private AuthenticationManager authenticationManager;
-    @Autowired
-    private JwtUtils jwtUtils;
-    @Autowired
     AuthTokenFilter authTokenFilter;
 
 
 
     @PostMapping("/auth/signIn")
     public ResponseEntity<?> authenticateUser(@RequestBody RegistrationRequest loginRequest) {
-
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
-
-        AppUser userDetails = (AppUser) authentication.getPrincipal();
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
+        String jwt = appUserService.auth(loginRequest).getToken();
         return ResponseEntity.ok(new JwtResponse(jwt));
     }
 
