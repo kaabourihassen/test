@@ -12,6 +12,7 @@ import lombok.ToString;
 @ToString
 public class RegistrationRequest {
     private final String full_name;
+    private final String avatar;
     private final String email;
     private final String password;
 }
