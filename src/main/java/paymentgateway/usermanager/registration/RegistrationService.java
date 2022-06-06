@@ -38,14 +38,14 @@ public class RegistrationService {
 
         String token = signUpUser(
                 new AppUser(
-                        request.getName(),
+                        request.getFull_name(),
                         request.getEmail(),
                         request.getPassword(),
                         AppUserRole.USER));
         String link ="http://localhost:8080/api/v1/registration/confirm?token=" + token;
         emailSender.send(
                 request.getEmail(),
-                buildEmail(request.getName(), link));
+                buildEmail(request.getFull_name(), link));
 
         return token;
     }
@@ -54,7 +54,6 @@ public class RegistrationService {
 
         if (userExists.isEmpty()) {
             String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
-
             user.setPassword(encodedPassword);
             user.setAppUserRole(AppUserRole.USER);
             user.setEnabled(false);
